@@ -1,8 +1,10 @@
+# [WIP] NOT PRODUCTION READY YET
+
 # sigh-babel6
 
 [![build status](https://circleci.com/gh/Strate/sigh-babel6.png)](https://circleci.com/gh/Strate/sigh-babel6)
 
-Sigh plugin for...
+Sigh plugin for babel 6
 
 ## Example
 
