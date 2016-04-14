@@ -16,12 +16,13 @@ function babel6Task(opts) {
     var res = babel.transform(
       event.data,
       {
-        filename: event.projectPath,
+        filename: event.path,
         extends: opts.babelrc,
         sourceMaps: true
       }
     )
-    // TODO: data = compile(event.data) etc.
+
+    res.map.sources = [event.sourcePath]
 
     return { code: res.code, map: res.map }
   }
@@ -39,7 +40,7 @@ function adaptEvent(compiler) {
       return event
     }
 
-    return compiler(_.pick(event, 'type', 'data', 'path', 'projectPath')).then(({code, map}) => {
+    return compiler(_.pick(event, 'type', 'data', 'path', 'projectPath', 'basePath', 'sourcePath')).then(({code, map}) => {
       event.data = code
 
       if (map) {
@@ -56,7 +57,7 @@ var pooledProc
 
 export default function(op, opts = {}) {
   if (! pooledProc)
-    pooledProc = op.procPool.prepare(babel6Task, opts)
+    pooledProc = op.procPool.prepare(babel6Task, Object.assign({cwd: process.cwd()}, opts))
 
   return mapEvents(op.stream, adaptEvent(pooledProc))
 }
